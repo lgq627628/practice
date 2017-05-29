@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>H5在线画板</title>
+	<link rel="stylesheet" type="text/css" href="paint.css">
+</head>
+<body>
+	<header id="top">HTML5在线画板</header>
+	<section id="content">
+		<!-- 工具区 -->
+		<ul id="tools">
+			<li>
+				<h3>图像</h3><hr>
+				<ul id="img">
+					<li id="saveImg" onclick="save(1)">
+						<form id="myform" action="http://localhost/down.php" method="post">
+							<input type="hidden" id="imgdata" name="data" value="">
+							<input type="button" value="保存图片">
+						</form>
+					</li>
+					<li id="clearImg" onclick="clr(2)"><input type="button" value="清空画布"></li>
+				</ul>
+			</li>
+			<li>
+				<h3>工具</h3><hr>
+				<ul id="tool">
+					<li onclick="brush(2)" id="brush"><img src="images/Brush.png" ></li>
+					<li onclick="eraser(3)" id="eraser"><img src="images/Eraser.png" ></li>
+					<li onclick="paint(4)" id="paint"><img src="images/Paint.png" ></li>
+					<li onclick="straw(5)" id="straw"><img src="images/Straw.png" ></li>
+					<li onclick="text(6)" id="text"><img src="images/text.png" ></li>
+					<li onclick="magnifier(7)" id="magnifier"><img src="images/Magnifier.png" ></li>
+				</ul>
+			</li>
+			<li>
+				<h3>形状</h3><hr>
+				<ul id="shape">
+					<li onclick="line(8)" id="line"><img src="images/line.png"></li>
+					<li onclick="arc(9)" id="arc"><img src="images/arc.png"></li>
+					<li onclick="rect(10)" id="rect"><img src="images/rect.png"></li>
+					<li onclick="poly(11)" id="poly"><img src="images/poly.png"></li>
+					<li onclick="arcFill(12)" id="arcFill"><img src="images/arcfill.png"></li>
+					<li onclick="rectFill(13)" id="rectFill"><img src="images/rectfill.png"></li>
+				</ul>
+			</li>
+			<li>
+				<h3>线宽</h3><hr>
+				<ul id="size">
+					<li onclick="setWidth(2)" id="width_1"><img src="images/line1px.png"></li>
+					<li onclick="setWidth(3)" id="width_3"><img src="images/line3px.png"></li>
+					<li onclick="setWidth(4)" id="width_5"><img src="images/line5px.png"></li>
+					<li onclick="setWidth(5)" id="width_8"><img src="images/line8px.png"></li>
+				</ul>
+			</li>
+			<li>
+				<h3>颜色</h3><hr>
+				<ul id="color">
+					<li id="red" onclick="setColor(this,0)"></li>
+					<li id="green" onclick="setColor(this,1)"></li>
+					<li id="blue" onclick="setColor(this,2)"></li>
+					<li id="yellow" onclick="setColor(this,3)"></li>
+					<li id="white" onclick="setColor(this,4)"></li>
+					<li id="black" onclick="setColor(this,5)"></li>
+					<li id="pink" onclick="setColor(this,6)"></li>
+					<li id="purple" onclick="setColor(this,7)"></li>
+					<li id="cyan" onclick="setColor(this,8)"></li>
+					<li id="orange" onclick="setColor(this,9)"></li>
+					<input type="color" name="favcolor" id="allcolor"/>
+				</ul>
+			</li>
+
+		</ul>
+		<!-- 绘图区 -->
+		<canvas id="canvas" width="880" height="400">
+			您的浏览器不支持canvas标签,请升级浏览器
+		</canvas>
+	</section>
+	<footer id="bottom">
+		<small>&copy;版权所有,盗版亦可lgq627628</small>
+	</footer>
+	<script type="text/javascript" src="paint.js"></script>
+</body>
+</html>

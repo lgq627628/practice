@@ -1,0 +1,105 @@
+/* 页面公用属性设置 */
+*{padding:0;margin:0;list-style:none;}
+body{background:#ABCDEF}
+
+/* 页面头部属性设置 */
+#top{
+	width: 900px;
+	height: 90px;
+	line-height: 90px;
+	font-size: 40px;
+	font-weight: 800;
+	margin: 0 auto;
+	text-align: center;
+}
+
+/* 页面中间内容属性设置 */
+#content{
+	width: 880px;
+	height: 550px;
+	padding: 10px;
+	background: gray;
+	margin: 0 auto;
+}
+#tools{
+	display: flex;
+	height: 150px;
+	text-align: center;
+}
+#tools li{
+	flex: 1;
+	height: 140px;
+	background: #ccc;
+	border-right: 1px solid #000;
+}
+#tools>li:last-child{
+	border-right: none;
+}
+#img{
+	padding: 20px;
+}
+#img li{
+	width: 100px;
+	height: 30px;
+	border: none;
+	list-style: square inside;
+}
+#img li input:hover{
+	border-color: #000;
+}
+#tool,#shape{
+	padding: 20px;
+}
+#tool li,#shape li{
+	float: left;
+	width: 20px;
+	height: 20px;
+	margin: 5px 10px;
+	border: 1px solid #000;
+}
+#tool li:hover,#shape li:hover{
+	border-color: #fff;
+}
+#tool img,#shape img{
+	width: 20px;
+	height: 20px;
+}
+#size{
+	padding: 10px;
+}
+#size li{
+	height: 20px;
+	border: 1px solid rgba(0,0,0,0);
+}
+#size li:hover{
+	border-color: #fff;
+}
+#color{padding-top: 10px;}
+#color li{height:20px;width:20px;display:inline-block;margin:2px;border:1px solid #000;}
+#color li:hover{border:1px solid #fff;}
+#color #red{background:red}
+#color #green{background:green}
+#color #blue{background:blue}
+#color #yellow{background:yellow}
+#color #white{background:white}
+#color #black{background:black}
+#color #pink{background:pink}
+#color #purple{background:purple}
+#color #cyan{background:#ABCDEF}
+#color #orange{background:orange}
+/* 在此设置可以导出透明背景 */
+#canvas{
+	background: white;
+}
+#canvas:hover{
+	cursor: crosshair;
+}
+/* 页面底部属性设置 */
+#bottom{
+	width: 900px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 18px;
+	margin: 0 auto;
+	text-align: center;
+}
