@@ -1,0 +1,80 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+a{
+    text-decoration: none;
+    color: rgb(0,0,0);
+}
+/* 选框样式开始 */
+.drop-wrapper{
+	position: absolute;
+	display: inline-block;
+}
+.drop-wrapper .drop-select{
+    position: relative;
+    display: inline-block;
+    width: 160px;
+    height: 36px;
+    line-height: 36px;
+    border: 1px solid rgb(219,219,243);
+    background: rgb(255,255,255);
+    font-size: 14px;
+}
+.drop-wrapper .drop-select .drop-input{
+	display: block;
+	width: 120px;
+	padding-left: 12px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+/* 下拉三角形样式 */
+.drop-wrapper .drop-select .drop-icon{
+	position: absolute;
+	right: 10px;
+	top: 16px;
+	display: block;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgb(0,0,0);
+}
+/* 下拉选项样式 */
+.drop-wrapper .drop-list{
+	position: absolute;
+    left: 0px;
+    top: 40px;
+    display: none;
+    border: 1px solid rgb(219,219,243);
+    z-index: 50;
+}
+.drop-wrapper .drop-option{
+	list-style: none;
+}
+.drop-wrapper .drop-option li{
+	position: relative;
+    background: rgb(255,255,255);
+}
+.drop-wrapper .drop-option li a{
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    white-space: nowrap;
+    padding: 0 20px 0 12px;
+    font-size: 14px;
+}
+.drop-wrapper .drop-option .bold{
+    font-weight: 600;
+}
+.drop-wrapper .drop-option .drop-tick{
+	background: url('../img/tick.png') center right no-repeat;
+    background-color: rgb(255,255,255);
+}
+.drop-wrapper .drop-option .drop-tick a{
+    color: rgb(72,144,255);
+}
+.drop-wrapper .drop-option li:hover{
+    background-color: rgb(216,216,255);
+}

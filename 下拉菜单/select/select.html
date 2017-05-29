@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>下拉菜单</title>
+	<link rel='stylesheet' type='text/css' href='css/select.css'>
+	<style type='text/css'>
+		#city{ 
+			margin-left: 100px;
+			margin-top: 100px;
+		}
+		#car{
+			margin-left: 400px;
+			margin-top: 100px;
+		}
+	</style>
+</head>
+<body>
+
+<select id='city'>
+    <option value='shanghai'>北京</option>
+    <option value='beijing'>上海上海上海上海上海上海</option>
+    <option value='guangzhou' selected>广州</option>
+    <option value='shenzhen'>深圳</option>
+</select>
+
+<select id="car">
+  <optgroup label="Swedish Cars">
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+  </optgroup>
+  <optgroup label="German Cars">
+    <option value="mercedes"  selected>Mercedes</option>
+    <option value="audi">Audi</option>
+  </optgroup>
+</select>
+
+<script type='text/javascript' src='js/jquery.min.js'></script>
+<script type='text/javascript' src='js/select.js'></script>
+<script type='text/javascript'>
+(function(){
+	var selectElement = document.getElementById('city');
+	var mySelect = new MySelect(selectElement);
+	mySelect.init();
+
+	var selectElement2 = document.getElementById('car');
+	var mySelect2 = new MySelect(selectElement2);
+	mySelect2.init();
+})()
+</script>
+</body>
+</html>
