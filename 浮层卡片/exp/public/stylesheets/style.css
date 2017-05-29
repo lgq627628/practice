@@ -1,0 +1,75 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.user{
+	display: inline-block;
+	margin: 150px;
+}
+/* 浮层样式开始 */
+.layer{
+	position: absolute;
+	width: 200px;
+	height: 80px;
+	padding: 10px;
+	text-align: left;
+	border: 1px solid rgb(160,65,235);
+	font-family: '微软雅黑';
+	z-index: 100;
+	display: none;
+}
+/* 三角形样式开始(此处用纯css制作三角形,可用transfrom中的rotate属性旋转一个小正方形,也可用图片替代) */
+.layer>span{
+	display: block;
+    width: 0;
+    height: 0;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: rgb(160,65,235) transparent transparent;
+    position: absolute;
+    bottom: -10px;
+    left: 50px;
+}
+.layer>span em{
+	display: block;
+    width: 0;
+    height: 0;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: rgb(255,255,255) transparent transparent;
+    position: absolute;
+ 	bottom: 1px; 
+	left: -10px;
+}
+/* 请求数据时的loading图片 */
+.layer .main img{
+	display: block;
+	margin: 24px auto;
+}
+.layer .tittle{
+	position: relative;
+	padding-left: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+.layer .tittle i{
+	position: absolute;
+	left: 0px;
+	top: 5px;
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	background: rgb(0,0,255);
+}
+.layer .content{
+	line-height: 20px;
+	font-size: 14px;
+}
+.layer .content .mr0{
+	margin-right: 0px;
+}
+.layer .content span{
+	display: inline-block;
+	margin-right: 10px;
+}
+/* 浮层样式结束 */
