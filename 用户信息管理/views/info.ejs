@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用户信息界面</title>
+</head>
+<body>
+	<h1>用户信息界面</h1>
+	<table width="800" border='1' cellspaing='0' cellpadding='1'>
+		<th>用户</th>
+		<th>年龄</th>
+		<th>email</th>
+		<th>nickname</th>
+		<th>操作</th>
+		<% for(var i=0; i<rlt.length; i++){ %>
+			<tr>
+				<td><%= rlt[i]['loginname'] %></td>
+				<td><%= rlt[i]['age'] %></td>
+				<td><%= rlt[i]['email'] %></td>
+				<td><%= rlt[i]['nickname'] %></td>
+				<td><a href="/deleteResult?userid=<%= rlt[i]['id'] %>">删除</a></td>
+			</tr>
+		<% } %>
+	</table>
+	
+</body>
+</html>
