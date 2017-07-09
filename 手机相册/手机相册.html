@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<title>手机相册</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			font-size: 0.15rem;
+			background: #333;
+			font-family: '微软雅黑';
+		}
+		header{
+			position: relative;
+			width: 100%;
+			height: 0.45rem;
+			line-height: 0.45rem;
+			text-align: center;
+			color: #fff;
+		}
+		header a{
+			position: absolute;
+			width: 0.5rem;
+			height: 0.25rem;
+			line-height: 0.25rem;
+			color: #fff;
+			text-decoration: none;
+			box-shadow: 0 0 5px #fff;
+			border-radius: 5px;
+		}
+		header a:nth-child(1){
+			left: 10px;
+			top: 10px;
+		}
+		header a:nth-child(2){
+			right: 10px;
+			top: 10px;
+			display: none;
+		}
+
+		section{
+			position: relative;
+			width: 100%;
+		}
+		section ul li{
+			position: absolute;
+			list-style: none;
+			width: 1rem;
+			height: 1rem;
+			border: 1px solid blue;
+			box-sizing: border-box;
+			transition: all 0.6s;
+		}
+		section ul li img{
+			width: 100%;
+			height: 100%; 
+		}
+		footer{
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 0.55rem;
+			background: #222;
+		}
+		footer a{
+			float: left;
+			width: 1.5rem;
+			height: 0.55rem;
+			line-height: 0.55rem;
+			color: #fff;
+			text-decoration: none;
+			box-sizing: border-box;
+			text-align: center;
+		}
+		footer a:nth-child(1){
+			border-right: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+<header>
+	<a href="javascript:;" class="btn">选择</a>
+	手机相册
+	<a href="javascript:;" class="btn">删除</a>
+</header>
+<section>
+	<ul id="main">	
+	</ul>	
+</section>
+<footer>
+	<a href="javascript:;">手机相册</a>
+	<a href="javascript:;">所有相册</a>
+</footer>
+<script type="text/javascript">
+	document.getElementsByTagName('html')[0].style.fontSize = document.documentElement.clientWidth/3 + 'px';
+
+	var oUl = document.getElementById('main');
+	var aBtn = document.getElementsByClassName('btn');
+	var aRemove = [];
+	var html = '';
+	for (var i = 0; i < 16; i++) {
+		html += '<li><img src=images/' + (i+1) + '.jpg></li>'
+	};
+	oUl.innerHTML = html;
+
+	var aLi = oUl.getElementsByTagName("li");
+	pos();
+	function pos(){
+		for (var i = 0; i < aLi.length; i++) {
+			aLi[i].style.left = i%3 + 'rem';
+			aLi[i].style.top = Math.floor(i/3) + 'rem';
+		};
+	}
+
+	aBtn[0].addEventListener("touchend",select);
+	var mark = true;
+	function select(){
+		if(mark){
+			aBtn[0].innerHTML = '取消';
+			for (var i = 0; i < aLi.length; i++) {
+				aLi[i].index = i;
+				aLi[i].onOff = true;
+				aLi[i].addEventListener('touchend',selectLi);
+			};
+		}else{
+			//取消功能
+			aBtn[0].innerHTML = '选择';
+			for (var i = 0; i < aLi.length; i++) {
+				aLi[i].style.opacity = 1;
+				//解绑
+				aLi[i].removeEventListener('touchend',selectLi);
+			};
+			//把上次要移除的数组清空
+			aRemove.length = 0;
+		}
+		mark = !mark;
+	}
+
+	//封装选择li的方法
+	function selectLi(){
+		if(this.onOff){
+			this.style.opacity = 0.6;
+			aRemove.push(this.index);
+			aBtn[1].style.display = 'block';
+		}else{
+			this.style.opacity = 1;
+			for (var i = 0; i < aRemove.length; i++) {
+				if(aRemove[i] == this.index){
+					aRemove.splice(i,1);
+				}
+			};
+		}
+		this.onOff = !this.onOff;
+	}
+
+	aBtn[1].onclick = function(){
+		aRemove.sort(function(a,b){
+			return b-a;
+		})
+		for (var i = 0; i < aRemove.length; i++) {
+			oUl.removeChild(aLi[aRemove[i]]);
+		};
+		aBtn[1].style.display = 'none';
+		mark = false;
+		select();
+		pos();
+	}
+</script>
+</body>
+</html>

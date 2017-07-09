@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>苹果相册</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			background: #000;
+			overflow: hidden;
+		}
+		#pic{
+			position: relative;
+			height: 250px;
+			margin: 150px auto;
+			transfrom-style: preserve-3d;	/* 3D环境 */
+			perspective: 800px;		/* 景深视角 */
+		}
+		#pic img{
+			position: absolute;
+			width: 300px;
+			height: 250px;
+			transition: .8s;
+			-webkit-box-reflect: below 0 -webkit-linear-gradient(top, rgba(0,0,0,0.1), rgba(0,0,0,0.5))
+		}
+		#pic img.now{
+			transform: translateZ(100px);
+			z-index: 10;
+		}
+		#pic img.before{
+			transform: rotateY(30deg) translateZ(-100px);
+		}
+		#pic img.after{
+			transform: rotateY(-30deg) translateZ(-100px);
+		}
+	</style>
+</head>
+<body>
+<div id="pic">
+	<img src="images/1.jpg" alt=''>
+	<img src="images/2.jpg" alt=''>
+	<img src="images/3.jpg" alt=''>
+	<img src="images/4.jpg" alt=''>
+	<img src="images/5.jpg" alt=''>
+	<img src="images/6.jpg" alt=''>
+	<img src="images/7.jpg" alt=''>
+	<img src="images/8.jpg" alt=''>
+	<img src="images/9.jpg" alt=''>
+	<img src="images/10.jpg" alt=''>
+	<img src="images/11.jpg" alt=''>
+</div>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+(function(){
+	var imgLen = $('img').length;
+	var midIndex = Math.floor(imgLen/2);
+
+	pos(midIndex);
+	$(window).resize(function(){
+		pos(midIndex);
+	});
+	$('img').click(function(){
+		var nowIndex = $(this).index();
+		pos(nowIndex);
+	})
+
+	function pos(index){
+		var winWidth = $(window).width();
+		$('img').eq(index).css('left', winWidth/2-150 + 'px');
+		forEach(function(i){
+			$('img').eq(i).css('left', winWidth/2-150-(index-i)*100 + 'px');
+		}, imgLen);
+		forEach(function(i){
+			if(i<index){
+				$('img').eq(i).removeClass().addClass('before');
+			}else if(i>index){
+				$('img').eq(i).removeClass().addClass('after');
+			}else{
+				$('img').eq(i).removeClass().addClass('now');
+			}
+		},imgLen);
+	}
+	function forEach(cb, length){
+		for (var i = 0; i < length; i++) {
+			cb(i);
+		};
+	}
+})()
+</script>
+</body>
+</html>
