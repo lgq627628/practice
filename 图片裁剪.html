@@ -1,0 +1,369 @@
+<template>
+	<div class="pick-up--add">
+
+		<v-header title="常用接送人认证"></v-header>
+		<div class="form ml-10 mr-10 mt-10 bg-white" style="overflow:hidden;">
+
+			<div class="form--avatar flex align-items-center ml-30 mr-30 mt-30 mb-30 h-100 justify-content-center">
+				<label for="img">
+          <img class="camera" src="./img/ic_camera@2x.png" v-if="!person.picturePath">
+          <div class="text" v-if="!person.picturePath">上传真实照片</div>
+          <img class="picture" :src="person.picturePath|fixImgUrl" v-if="person.picturePath">
+        </label>
+				<input @change="cropImg($event)" id="img" type="file" name="File" class="hidden">
+			</div>
+			<div class="flex align-items-center border-bottom h-60 ml-30 mr-30 f-15">
+				<span class="c-black">姓名</span>
+				<span class="star">*</span>
+				<input class="ml-auto text-right c-black no-border" v-model="person.name" placeholder="请填写真实姓名">
+			</div>
+			<div class="flex align-items-center border-bottom h-60 ml-30 mr-30 f-15" @click="actionsheets.gender=true">
+				<span class="c-black">亲属关系</span>
+				<span class="star">*</span>
+				<span class="ml-auto text-right c-black no-border" v-if="person.relationship">{{relationship[person.relationship]}}</span>
+				<span class="ml-auto text-right c-black no-border" v-if="!person.relationship" style="color:#99A9BF;">请选择</span>
+				<img src="./img/el-icon-caret-bottom.svg" v-if="!person.relationship" style="margin-left:0.5rem;">
+			</div>
+			<div class="flex align-items-center border-bottom h-60 ml-30 mr-30 f-15">
+				<span class="c-black">联系方式</span>
+				<span class="star">*</span>
+				<input class="ml-auto text-right c-black no-border" type="number" v-model="person.phoneNo" placeholder="请填写联系方式">
+			</div>
+			<div class="flex align-items-center border-bottom h-60 ml-30 mr-30 f-15">
+				<span class="c-black">身份证号</span>
+				<input class="ml-auto text-right c-black no-border" v-model="person.identityCard" placeholder="请填写身份证号">
+			</div>
+			<div class="submit" @click="submit">保存</div>
+
+			<actionsheet v-model="actionsheets.gender" :menus="menus" show-cancel @on-click-menu="setRelationship"></actionsheet>
+
+			<popup v-model="showCrop" height="100%">
+        <div class="img-box" style="height:100%;vertical-align: middle;padding-bottom: 42px;padding-top: 44px;">
+          <img :id="imgId">
+        </div>
+        <flexbox style="position: fixed;bottom: 0;background: #fff;height: 42px;">
+	        <flexbox-item @click.native="showCrop = false">
+	          <x-button style="border-radius: 0 6px 6px 0;">取消</x-button>
+	        </flexbox-item>
+	        <flexbox-item @click.native="showCrop = false;saveImg()">
+	          <x-button type="primary" style="border-radius: 4px 0 0 4px;">确认裁剪</x-button>
+	        </flexbox-item>
+	      </flexbox>
+      </popup>
+		</div>
+	</div>
+</template>
+
+<script>
+  import cropper from 'cropper';
+  import 'cropper/dist/cropper.css';
+	import { Actionsheet, XButton, Flexbox, FlexboxItem, Popup } from 'vux';
+	import vHeader from './components/v-header.vue';
+	import { getFileBase64 } from './js/student';
+	export default {
+		components: {
+			Actionsheet,
+			XButton,
+			Flexbox,
+			FlexboxItem,
+			Popup,
+			vHeader
+		},
+		created() {
+			this.camperId = this.$route.query.camperId;
+			this.type = this.$route.query.type;
+			// 编辑联系人
+			if(this.type === 'edit') {
+				this.init();
+			}
+		},
+		methods: {
+			init() {
+				let xhr = common.getJson(common.api.studentCenter.frequentpickupdetail, {
+					auth: localStorage.getItem("auth"),
+					data: {
+						camperId: this.camperId,
+						frequentPickUpId: this.$route.query.frequentPickUpId
+					}
+				}, res => {
+					if(res.code == 0) {
+						this.person = Object.assign({}, this.person, res.data);
+					} else {
+						common.popMsg(res.msg)
+					}
+				})
+				setTimeout(() => {
+					if(xhr.readyState < 4) {}
+				}, 400)
+			},
+			cropImg(event) {
+				console.log(event)
+        let file = event.target.files[0]
+        event.target.value = ''
+        if (!file.type.match(/image.*/)) {
+          common.popMsg('请选择图片');
+          return;
+        }
+        this.showCrop = true
+        let fileReader = new FileReader()
+        console.log(file)
+  			fileReader.readAsDataURL(file)
+  			let _this = this;
+        fileReader.onload = e => {
+          var mathlength = 1024 * 1024 * 10;
+          if (e.total >= mathlength) {
+            this.showCrop = false
+            common.popMsg("最大上传10M的图片");
+            return
+          }
+          this.showCrop = true
+          let $cropperImg = $("#" + _this.imgId)
+          $cropperImg.removeAttr('src')
+          $cropperImg.attr('src', e.target.result)
+          _this.$nextTick(() => {
+          	$cropperImg.cropper({
+	          	autoCropArea: 1,
+	            viewMode: 2,
+	            zoomable: false,
+	            dragCrop: false,
+	            dragMode: 'none',
+	            aspectRatio: 1 / 1
+	          })
+          });
+          
+        }
+      },
+      saveImg(){
+        if (true) {
+        	 let $cropperImg = $("#" + this.imgId)
+          let src = $cropperImg.cropper('getCroppedCanvas',{
+            width: 340,
+            height: 340
+          }).toDataURL('image/png', 0.5)
+          $cropperImg.cropper('destroy')
+          let xhr = common.getJson(common.api.common.uploadImage, { image : src }, res => {
+            common.hideLoading()
+            if (res.code == 0) {
+              this.$set(this.person, 'picturePath', res.data.url);
+            } else {
+              common.popMsg(res.msg);
+            }
+          })
+          setTimeout(function () {
+            if (xhr.readyState < 4) {
+              common.showLoading()
+            }
+          }, 400)
+        }
+      },
+			setRelationship(val) {
+				if(isNaN(val)) {
+					return;
+				}
+				this.person.relationship = val;
+			},
+			submit() {
+				// 防止多次点击
+				if(this.isSubmit) {
+					return;
+				}
+				// 校验输入信息
+				if(!this.person.picturePath) {
+					common.popMsg("请上传照片");
+					return;
+				}
+				if(!this.person.picturePath) {
+					common.popMsg("请填写姓名");
+					return;
+				}
+				if(!this.person.name) {
+					common.popMsg("请填写姓名");
+					return;
+				}
+				if(!this.person.relationship) {
+					common.popMsg("请选择亲属关系");
+					return;
+				}
+				if(!this.person.phoneNo) {
+					common.popMsg("请填写联系方式");
+					return;
+				}
+				if(this.person.phoneNo.length < 11 || this.person.phoneNo.indexOf(1) != 0) {
+					common.popMsg("请输入11位手机号码");
+					return;
+				}
+				//base 64图片，先上传
+				if(this.person.picturePath.indexOf('data') == 0) {
+					let xhr = common.postJson(common.api.common.uploadImage, {
+						data: {
+							image: this.person.picturePath
+						}
+					}, res => {
+						common.hideMsg()
+						if(res.code == 0) {
+							this.person.picturePath = res.data.url;
+							this.submit();
+						} else {
+							common.popMsg(res.msg)
+							this.isSubmit = false;
+						}
+					})
+					if(xhr.readyState < 4) {
+						common.showMsg('图片上传中...')
+						common.showLoading()
+					}
+				} else {
+					this.isSubmit = true;
+					var data = {};
+					data.picturePath = this.person.picturePath;
+					data.camperId = this.camperId;
+					data.relationship = this.person.relationship;
+					data.name = this.person.name;
+					data.phoneNo = this.person.phoneNo;
+					if(this.type==='edit'){
+						data.id=this.person.id;
+					}
+					if(this.person.identityCard) {
+						data.identityCard = this.person.identityCard;
+					}
+					let xhr = common.getJson(common.api.studentCenter.editfrequentpickup, {
+						auth: localStorage.getItem("auth"),
+						data: data
+					}, res => {
+						if(res.code == 0) {
+							let that = this;
+							common.hideLoading()
+							common.popMsg("保存成功");
+							that.$router.push({
+								path: 'pick-up-list',
+								query: { camperId: that.camperId }
+							});
+						} else {
+							common.popMsg(res.msg)
+							common.hideLoading()
+							this.isSubmit = false;
+						}
+					})
+					setTimeout(() => {
+						if(xhr.readyState < 4) {}
+					}, 400)
+				}
+			}
+		},
+		data() {
+			return {
+				imgId: 'img_' + Math.random().toString().replace('.', ''),
+				id: 'input_' + Math.random().toString().replace('.', ''),
+				person: {},
+				showCrop: false,
+				cropperImg: null,
+				actionsheets: { gender: false },
+				isSubmit: false,
+				relationship: ['', '父亲', '母亲', '爷爷', '奶奶', '外公', '外婆', '其他'],
+				menus: [{
+						label: '父亲',
+						value: 1
+					},
+					{
+						label: '母亲',
+						value: 2
+					},
+					{
+						label: '爷爷',
+						value: 3
+					},
+					{
+						label: '奶奶',
+						value: 4
+					},
+					{
+						label: '外公',
+						value: 5
+					},
+					{
+						label: '外婆',
+						value: 6
+					},
+					{
+						label: '其他',
+						value: 7
+					}
+				]
+			};
+		}
+	}
+</script>
+<style lang="scss">
+	$place-color: #99A9BF;
+	 ::-webkit-input-placeholder {
+		/* WebKit browsers */
+		color: $place-color;
+	}
+	
+	 :-moz-placeholder {
+		/* Mozilla Firefox 4 to 18 */
+		color: $place-color;
+	}
+	
+	 ::-moz-placeholder {
+		/* Mozilla Firefox 19+ */
+		color: $place-color;
+	}
+	
+	 :-ms-input-placeholder {
+		/* Internet Explorer 10+ */
+		color: $place-color;
+	}
+	
+	.pick-up--add {
+		.form {
+			font-family: PingFangSC-Regular;
+			border-radius: 6px;
+			&--avatar {
+				label {
+					position: relative;
+					display: block;
+					width: 5rem;
+					height: 5rem;
+					background: #F9FAFC;
+					border: 4px solid #E5E9F2;
+					overflow: hidden;
+					text-align: center;
+					font-size: 0;
+				}
+				.camera {
+					width: 2rem;
+					margin: 1rem 0 0.45rem;
+				}
+				.text {
+					font-size: 0.55rem;
+					color: #99A9BF;
+				}
+				.picture {
+					position: absolute;
+					width: 100%;
+					height: auto;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+				}
+			}
+			.star {
+				color: #FF4949;
+			}
+			.submit {
+				height: 2.25rem;
+				line-height: 2.25rem;
+				background: #20A0FF;
+				border-radius: 6px;
+				text-align: center;
+				font-size: 0.85rem;
+				color: #fff;
+				letter-spacing: 0.2rem;
+				margin: 2rem 2rem 1.5rem;
+			}
+		}
+	}
+</style>
